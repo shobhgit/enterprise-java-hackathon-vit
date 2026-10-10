@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--
+    Route: GET /appointments/{id}
+    opens the details page for a particular appointment.
+    Model: appointment, consultation
+    appointment contains information about the selected appointment.
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Appointment details</title>
+</head>
+<body>
+<section>
+
+    <div class="page-header">
+        <h1>Appointment</h1>
+
+        <!-- Only a scheduled appointment can get a consultation -->
+        <a class="btn"
+           th:if="${appointment.status.name() == 'SCHEDULED'}"
+           th:href="@{/appointments/{id}/consultation/new(id=${appointment.id})}">Record consultation</a>
+    </div>
+
+    <div class="card">
+        <p><strong>Resident:</strong>
+            <a th:href="@{/residents/{id}(id=${appointment.resident.id})}"
+               th:text="${appointment.resident.fullName}">Name</a></p>
+        <p><strong>Health centre:</strong> <span th:text="${appointment.healthCentre.name}">Centre</span></p>
+        <p><strong>Health worker:</strong> <span th:text="${appointment.healthWorker.fullName}">Worker</span></p>
+        <p><strong>Date and time:</strong>
+            <span th:text="${#temporals.format(appointment.scheduledAt, 'dd MMM yyyy, HH:mm')}">Date</span></p>
+        <p><strong>Reason:</strong> <span th:text="${appointment.reason}">Reason</span></p>
+        <p><strong>Status:</strong> <span class="badge" th:text="${appointment.status}">SCHEDULED</span></p>
+    </div>
+
+    <!-- creates a form for cancelling a scheduled appointment. -->
+    <form class="inline-form" method="post"
+          th:if="${appointment.status.name() == 'SCHEDULED'}"
+          th:action="@{/appointments/{id}/status(id=${appointment.id})}">
+        <input type="hidden" name="status" value="CANCELLED">
+        <button type="submit" class="btn btn--danger">Cancel appointment</button>
+    </form>
+
+    <!-- Consultation shown only if one has been recorded -->
+    <h2>Consultation</h2>
+    <div class="card" th:if="${consultation != null}">
+        <p><strong>Diagnosis:</strong> <span th:text="${consultation.diagnosis}">Diagnosis</span></p>
+        <p><strong>Treatment:</strong> <span th:text="${consultation.treatment}">Treatment</span></p>
+    </div>
+    <p th:if="${consultation == null}">No consultation has been recorded yet.</p>
+    <p><a th:href="@{/appointments}">Back to appointments</a></p>
+
+</section>
+</body>
+</html>
