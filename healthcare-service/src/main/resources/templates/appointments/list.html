@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--
+    Route: GET/appointments
+    Model: appointments
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Appointments</title>
+</head>
+<body>
+<section>
+
+    <div class="page-header">
+        <h1>Appointments</h1>
+        <a class="btn" th:href="@{/appointments/new}">Book appointment</a>
+    </div>
+
+    <!-- status filter for appointments-->
+    <p>
+        <a th:href="@{/appointments}">All</a> |
+        <a th:href="@{/appointments(status='SCHEDULED')}">Scheduled</a> |
+        <a th:href="@{/appointments(status='COMPLETED')}">Completed</a> |
+        <a th:href="@{/appointments(status='CANCELLED')}">Cancelled</a>
+    </p>
+
+    <table th:if="${!#lists.isEmpty(appointments)}">
+        <thead>
+        <tr>
+            <th>Date and time</th>
+            <th>Resident</th>
+            <th>Health centre</th>
+            <th>Health worker</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${appointments}">
+            <td th:text="${#temporals.format(a.scheduledAt, 'dd MMM yyyy, HH:mm')}">Date</td>
+            <td th:text="${a.resident.fullName}">Resident</td>
+            <td th:text="${a.healthCentre.name}">Centre</td>
+            <td th:text="${a.healthWorker.fullName}">Worker</td>
+            <td><span class="badge" th:text="${a.status}">SCHEDULED</span></td>
+            <td><a th:href="@{/appointments/{id}(id=${a.id})}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${#lists.isEmpty(appointments)}">No appointments found.</p>
+
+</section>
+</body>
+</html>

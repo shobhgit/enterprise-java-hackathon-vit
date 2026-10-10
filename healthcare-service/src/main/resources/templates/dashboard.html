@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--
+    dashboard.html
+    Route: GET /dashboard  (OFFICER only, enforced by the server)
+
+    Model (from the API contract, section 3.4):
+      residentCount, centreCount         numbers from our own database
+      scheduledAppointments              next 10 SCHEDULED appointments
+      upcomingCamps                      PLANNED camps, soonest first
+      pendingFollowUps                   camp beneficiaries with follow-up PENDING
+      publicHealthAvailable              false if the Public Health call failed
+      publicHealth                       summary from Public Health, or null
+
+    If the Public Health service is down, publicHealth is null. The page still
+    renders, base.html shows the warning banner, and the Public Health
+    sections below are simply left out.
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+<section>
+
+    <h1>Dashboard</h1>
+
+    <!-- ===== Number tiles ===== -->
+    <div class="stat-row">
+        <!-- Counts from our own database: always shown -->
+        <div class="stat">
+            <span class="stat__value" th:text="${residentCount}">0</span>
+            <span class="stat__label">Residents</span>
+        </div>
+        <div class="stat">
+            <span class="stat__value" th:text="${centreCount}">0</span>
+            <span class="stat__label">Health centres</span>
+        </div>
+
+        <!-- Counts from the Public Health service: shown only when it answered -->
+        <th:block th:if="${publicHealth != null}">
+            <div class="stat" th:classappend="${publicHealth.openSanitationComplaints > 0} ? 'stat--alert'">
+                <span class="stat__value" th:text="${publicHealth.openSanitationComplaints}">0</span>
+                <span class="stat__label">Open sanitation complaints</span>
+            </div>
+            <div class="stat" th:classappend="${publicHealth.openReplenishmentRequests > 0} ? 'stat--alert'">
+                <span class="stat__value" th:text="${publicHealth.openReplenishmentRequests}">0</span>
+                <span class="stat__label">Open replenishment requests</span>
+            </div>
+            <div class="stat" th:classappend="${publicHealth.waterIssuesPendingAction > 0} ? 'stat--alert'">
+                <span class="stat__value" th:text="${publicHealth.waterIssuesPendingAction}">0</span>
+                <span class="stat__label">Water issues pending action</span>
+            </div>
+        </th:block>
+    </div>
+
+    <!-- ===== Scheduled appointments (next 10) ===== -->
+    <h2>Scheduled appointments</h2>
+    <table th:if="${!#lists.isEmpty(scheduledAppointments)}">
+        <thead>
+        <tr><th>Date and time</th><th>Resident</th><th>Health centre</th><th></th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${scheduledAppointments}">
+            <td th:text="${#temporals.format(a.scheduledAt, 'dd MMM yyyy, HH:mm')}">Date</td>
+            <td th:text="${a.resident.fullName}">Resident</td>
+            <td th:text="${a.healthCentre.name}">Centre</td>
+            <td><a th:href="@{/appointments/{id}(id=${a.id})}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(scheduledAppointments)}">No scheduled appointments.</p>
+
+    <!-- ===== Upcoming camps ===== -->
+    <h2>Upcoming health camps</h2>
+    <table th:if="${!#lists.isEmpty(upcomingCamps)}">
+        <thead>
+        <tr><th>Camp</th><th>Location</th><th>Start</th><th></th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${upcomingCamps}">
+            <td th:text="${c.name}">Name</td>
+            <td th:text="${c.location}">Location</td>
+            <td th:text="${#temporals.format(c.startDate, 'dd MMM yyyy')}">Start</td>
+            <td><a th:href="@{/camps/{id}(id=${c.id})}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(upcomingCamps)}">No upcoming camps.</p>
+
+    <!-- ===== Camp follow-ups still pending ===== -->
+    <h2>Pending follow-ups</h2>
+    <table th:if="${!#lists.isEmpty(pendingFollowUps)}">
+        <thead>
+        <tr><th>Resident</th><th>Camp</th><th>Screening result</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="b : ${pendingFollowUps}">
+            <td th:text="${b.resident.fullName}">Resident</td>
+            <td th:text="${b.camp?.name}">Camp</td>
+            <td th:text="${b.screeningResult}">Result</td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(pendingFollowUps)}">No pending follow-ups.</p>
+
+    <!-- ===== Public Health sections: only when the service answered ===== -->
+    <th:block th:if="${publicHealth != null}">
+
+        <h2>Medicines low on stock</h2>
+        <table th:if="${!#lists.isEmpty(publicHealth.lowStockMedicines)}">
+            <thead>
+            <tr><th>Medicine</th><th>Health centre</th><th>Quantity</th><th>Reorder level</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="m : ${publicHealth.lowStockMedicines}">
+                <td th:text="${m.name}">Name</td>
+                <td th:text="${m.healthCentreName}">Centre</td>
+                <td><span class="badge badge--alert" th:text="${m.quantity}">0</span></td>
+                <td th:text="${m.reorderLevel}">0</td>
+                <td><a th:href="@{/medicines/{id}(id=${m.id})}">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(publicHealth.lowStockMedicines)}">No medicines are low on stock.</p>
+
+        <h2>Recent pending items</h2>
+        <table th:if="${!#lists.isEmpty(publicHealth.recentPending)}">
+            <thead>
+            <tr><th>Type</th><th>Summary</th><th>Status</th><th>Created</th><th></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${publicHealth.recentPending}">
+                <td th:text="${p.type}">SANITATION</td>
+                <td th:text="${p.summary}">Summary</td>
+                <td><span class="badge badge--alert" th:text="${p.status}">OPEN</span></td>
+                <td th:text="${#strings.replace(p.createdAt, 'T', ' ')}">Created</td>
+                <!-- Link to the page that handles this type of item -->
+                <td>
+                    <a th:href="${p.type.toString() == 'SANITATION'} ? @{/sanitation/complaints}
+                                  : (${p.type.toString() == 'REPLENISHMENT'} ? @{/replenishments} : @{/water})">Open</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p th:if="${#lists.isEmpty(publicHealth.recentPending)}">Nothing is pending.</p>
+
+    </th:block>
+
+</section>
+</body>
+</html>

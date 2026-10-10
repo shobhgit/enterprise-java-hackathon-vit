@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--
+    Routes: GET /appointments/new (show form)
+    Opens the form for booking a new appointment
+    POST /appointments
+    Submits the form to the backend to save the appointment
+    Model: appointment,residents,centres, workers
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book appointment</title>
+</head>
+<body>
+<section>
+
+    <h1>Book appointment</h1>
+
+    <form class="form" th:action="@{/appointments}" th:object="${appointment}" method="post">
+
+        <div class="field">
+            <label for="residentId">Resident</label>
+            <select id="residentId" th:field="*{residentId}">
+                <option value="">Select a resident</option>
+                <option th:each="r : ${residents}" th:value="${r.id}" th:text="${r.fullName}">Name</option>
+            </select>
+            <span class="field__error" th:if="${#fields.hasErrors('residentId')}" th:errors="*{residentId}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="healthCentreId">Health centre</label>
+            <select id="healthCentreId" th:field="*{healthCentreId}">
+                <option value="">Select a health centre</option>
+                <option th:each="c : ${centres}" th:value="${c.id}" th:text="${c.name}">Centre</option>
+            </select>
+            <span class="field__error" th:if="${#fields.hasErrors('healthCentreId')}" th:errors="*{healthCentreId}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="healthWorkerId">Health worker</label>
+            <select id="healthWorkerId" th:field="*{healthWorkerId}">
+                <option value="">Select a health worker</option>
+                <option th:each="w : ${workers}" th:value="${w.id}" th:text="${w.fullName}">Worker</option>
+            </select>
+            <span class="field__error" th:if="${#fields.hasErrors('healthWorkerId')}" th:errors="*{healthWorkerId}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="scheduledAt">Date and time</label>
+            <input id="scheduledAt" type="datetime-local" th:field="*{scheduledAt}">
+            <span class="field__error" th:if="${#fields.hasErrors('scheduledAt')}" th:errors="*{scheduledAt}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="reason">Reason for visit</label>
+            <textarea id="reason" rows="3" th:field="*{reason}"></textarea>
+            <span class="field__error" th:if="${#fields.hasErrors('reason')}" th:errors="*{reason}">Error</span>
+        </div>
+
+        <button type="submit" class="btn">Book appointment</button>
+        <a th:href="@{/appointments}">Cancel</a>
+
+    </form>
+
+</section>
+</body>
+</html>

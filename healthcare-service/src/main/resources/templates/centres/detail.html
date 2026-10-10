@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!--
+    Route: GET /centres/{id}
+    Model: centre, workers (workers at this centre), worker (empty form object for the add form)
+    The add-worker form posts to POST /centres/{id}/workers.
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Health centre details</title>
+</head>
+<body>
+<section>
+
+    <h1 th:text="${centre.name}">Centre name</h1>
+
+    <div class="card">
+        <p><strong>Location:</strong> <span th:text="${centre.location}">Location</span></p>
+    </div>
+
+    <!-- Workers at this centre -->
+    <h2>Health workers</h2>
+    <table th:if="${!#lists.isEmpty(workers)}">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Designation</th>
+            <th>Phone</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="w : ${workers}">
+            <td th:text="${w.fullName}">Name</td>
+            <td th:text="${w.designation}">Designation</td>
+            <td th:text="${w.phone}">Phone</td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(workers)}">No health workers have been added to this centre yet.</p>
+
+    <!-- Add worker form -->
+    <h2>Add health worker</h2>
+    <form class="form" th:object="${worker}" method="post"
+          th:action="@{/centres/{id}/workers(id=${centre.id})}">
+
+        <div class="field">
+            <label for="fullName">Full name</label>
+            <input id="fullName" type="text" th:field="*{fullName}">
+            <span class="field__error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="designation">Designation</label>
+            <input id="designation" type="text" th:field="*{designation}">
+            <span class="field__error" th:if="${#fields.hasErrors('designation')}" th:errors="*{designation}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" type="text" th:field="*{phone}">
+            <span class="field__error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Error</span>
+        </div>
+
+        <button type="submit" class="btn">Add worker</button>
+
+    </form>
+
+    <p><a th:href="@{/centres}">Back to health centres</a></p>
+
+</section>
+</body>
+</html>
