@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- Set the page title -->
+    <title>Medicine Details</title>
+</head>
+
+<body>
+
+<!-- Display the page heading -->
+<h2>Medicine Details</h2>
+
+<!-- Display the medicine name -->
+<p>Name: <span th:text="${medicine.name}"></span></p>
+
+<!-- Display the medicine type -->
+<p>Type: <span th:text="${medicine.type}"></span></p>
+
+<!-- Display the unit of the medicine -->
+<p>Unit: <span th:text="${medicine.unit}"></span></p>
+
+<!-- Display the available quantity -->
+<p>Quantity: <span th:text="${medicine.quantity}"></span></p>
+
+<!-- Display the reorder level -->
+<p>Reorder Level: <span th:text="${medicine.reorderLevel}"></span></p>
+
+<!-- Display the health center name -->
+<p>Health Centre: <span th:text="${medicine.healthCentreName}"></span></p>
+
+<!-- Display the medicine stock status -->
+<p>Status:
+    <span th:text="${medicine.lowStock ? 'Low Stock' : 'In Stock'}"></span>
+</p>
+
+<!-- Display the issue history heading -->
+<h3>Issue History</h3>
+
+<!-- Create a table to display medicine issue records -->
+<table>
+    <tr>
+        <!-- Display the issue date column -->
+        <th>Date</th>
+
+        <!-- Display the issued quantity column -->
+        <th>Quantity</th>
+
+        <!-- Display the notes column -->
+        <th>Notes</th>
+    </tr>
+
+    <!-- Display each issue record from the issues list -->
+    <tr th:each="issue : ${issues}">
+
+        <!-- Display the date of the issue -->
+        <td th:text="${issue.createdAt}"></td>
+
+        <!-- Display the issued quantity -->
+        <td th:text="${issue.quantity}"></td>
+
+        <!-- Display the notes for the issue -->
+        <td th:text="${issue.notes}"></td>
+    </tr>
+</table>
+
+<!-- Show a message if no issue history is available -->
+<p th:if="${#lists.isEmpty(issues)}">No issue history found.</p>
+
+<!-- Add space before the back link -->
+<br>
+
+<!-- Provide a link to return to the medicine list -->
+<a th:href="@{/medicines}">Back to Medicine List</a>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<!-- The 'lang="en"' attribute satisfies accessibility requirements and clears IDE validation errors -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Character encoding meta tag defines the character set for the document -->
+    <meta charset="UTF-8">
+    <title>Add Sanitation Facility</title>
+</head>
+<body>
+
+<!-- Page heading -->
+<h2>Add Sanitation Facility</h2>
+
+<!-- Form to add a facility -->
+<form th:action="@{/sanitation/facilities}" method="post">
+
+    <!-- Enter facility name: Linked using for="name" and id="name" -->
+    <label for="name">Facility Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br><br>
+
+    <!-- Select facility type: Linked using for="type" and id="type" -->
+    <label for="type">Type:</label>
+    <select id="type" name="type" required>
+        <option value="">Select Type</option>
+        <option value="TOILET">Toilet</option>
+        <option value="WATER_POINT">Water Point</option>
+        <option value="DRAIN">Drain</option>
+        <option value="WASTE_POINT">Waste Point</option>
+    </select>
+    <br><br>
+
+    <!-- Enter facility location: Linked using for="location" and id="location" -->
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location" required>
+    <br><br>
+
+    <!-- Select cleanliness status: Linked using for="cleanlinessStatus" and id="cleanlinessStatus" -->
+    <label for="cleanlinessStatus">Cleanliness Status:</label>
+    <select id="cleanlinessStatus" name="cleanlinessStatus" required>
+        <option value="CLEAN">Clean</option>
+        <option value="NEEDS_CLEANING">Needs Cleaning</option>
+        <option value="DAMAGED">Damaged</option>
+    </select>
+    <br><br>
+
+    <!-- Submit the form -->
+    <button type="submit">Save Facility</button>
+
+</form>
+
+<!-- Return to facility list -->
+<br>
+<a th:href="@{/sanitation/facilities}">Back to Facilities</a>
+
+</body>
+</html>

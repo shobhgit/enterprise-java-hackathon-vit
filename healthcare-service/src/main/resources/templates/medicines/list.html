@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Page title -->
+    <title>Medicine List</title>
+</head>
+<body>
+
+<!-- Main heading -->
+<h2>Medicine List</h2>
+
+<!-- This is link to add new medicine -->
+<a th:href="@{/medicines/new}">Add Medicine</a>
+
+<!-- Table showing medicine details -->
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    <!-- Fetching each medicine data from the backend -->
+    <tr th:each="medicine : ${medicines}">
+        <td th:text="${medicine.name}"></td>
+        <td th:text="${medicine.quantity}"></td>
+        <td th:text="${medicine.lowStock ? 'Low Stock' : 'In Stock'}"></td>
+        <td>
+            <!-- Display medicine details -->
+            <a th:href="@{/medicines/{id}(id=${medicine.id})}">View</a>
+        </td>
+    </tr>
+</table>
+
+<!-- This show message when list is empty -->
+<p th:if="${#lists.isEmpty(medicines)}">No medicines found.</p>
+
+</body>
+</html>

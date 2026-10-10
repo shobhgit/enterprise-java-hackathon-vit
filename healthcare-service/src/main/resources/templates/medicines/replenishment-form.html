@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!-- The 'lang="en"' attribute satisfies accessibility requirements and clears IDE validation errors -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Character encoding meta tag defines the character set for the document -->
+    <meta charset="UTF-8">
+    <!-- Page title -->
+    <title>New Replenishment Request</title>
+</head>
+<body>
+
+<!-- Page heading -->
+<h2>New Replenishment Request</h2>
+
+<!-- Form to send the request to the backend -->
+<form th:action="@{/replenishments}" method="post">
+
+    <!-- Select the medicine: Linked using for="medicineId" and id="medicineId" -->
+    <label for="medicineId">Medicine:</label>
+    <select id="medicineId" name="medicineId" required>
+        <option value="">Select Medicine</option>
+        <!-- Dynamic loop using Thymeleaf to pull available inventory passed from the controller -->
+        <option th:each="medicine : ${medicines}"
+                th:value="${medicine.id}"
+                th:text="${medicine.name}">
+        </option>
+    </select>
+    <br><br>
+
+    <!-- Enter the required quantity: Linked using for="quantity" and id="quantity" -->
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" min="1" required>
+    <br><br>
+
+    <!-- Enter the reason for the request: Linked using for="reason" and id="reason" -->
+    <label for="reason">Reason:</label>
+    <textarea id="reason" name="reason" required></textarea>
+    <br><br>
+
+    <!-- Submit the form -->
+    <button type="submit">Submit Request</button>
+
+</form>
+
+<!-- Return to the requests page -->
+<br>
+<a th:href="@{/replenishments}">Back to Requests</a>
+
+</body>
+</html>

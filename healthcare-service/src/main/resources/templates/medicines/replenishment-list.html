@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <!-- Page title -->
+  <title>Replenishment Requests</title>
+</head>
+<body>
+
+<!-- Heading of the page -->
+<h2>Replenishment Requests</h2>
+
+<!-- Link to create a new request -->
+<a th:href="@{/replenishments/new}">New Request</a>
+
+<!-- Table to display requests -->
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Medicine</th>
+    <th>Quantity</th>
+    <th>Status</th>
+  </tr>
+
+  <!-- Display each request from the backend -->
+  <tr th:each="request : ${requests}">
+    <td th:text="${request.id}"></td>
+    <td th:text="${request.medicineName}"></td>
+    <td th:text="${request.quantity}"></td>
+    <td th:text="${request.status}"></td>
+  </tr>
+</table>
+
+<!-- Message shown when there are no requests -->
+<p th:if="${#lists.isEmpty(requests)}">
+  No replenishment requests found.
+</p>
+
+<!-- Link to return to medicine list -->
+<br>
+<a th:href="@{/medicines}">Back to Medicine List</a>
+
+</body>
+</html>
