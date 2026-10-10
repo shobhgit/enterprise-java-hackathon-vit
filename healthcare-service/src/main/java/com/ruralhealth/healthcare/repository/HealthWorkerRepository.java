@@ -10,4 +10,5 @@ public interface HealthWorkerRepository
         extends JpaRepository<HealthWorker, Long> {
 
     List<HealthWorker> findByHealthCentre_Id(Long healthCentreId);
+    List<HealthWorker> findAll();
 }
