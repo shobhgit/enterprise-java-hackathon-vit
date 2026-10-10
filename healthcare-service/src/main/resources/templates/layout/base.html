@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--
+    layout/base.html
+    Shared layout for every page in the Healthcare Service.
+
+    How a page uses this layout (example: residents/list.html):
+
+        <!DOCTYPE html>
+        <html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+              xmlns:th="http://www.thymeleaf.org">
+        <head>
+            <title>Residents</title>
+        </head>
+        <body>
+            <section>
+                ... page content goes here ...
+            </section>
+        </body>
+        </html>
+
+    Only the first <section> is inserted, so keep all page content inside it.
+    Needs spring-boot-starter-thymeleaf and thymeleaf-extras-springsecurity6 in pom.xml.
+-->
+<html th:fragment="layout(title, content)" lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Page title comes from the page that uses this layout -->
+    <title th:replace="${title}">Rural Health and Sanitation</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<!-- Top navigation: shown only after login, so the login page has no navbar -->
+<header class="site-header" sec:authorize="isAuthenticated()">
+    <div class="site-header__inner">
+
+        <a class="site-header__brand" th:href="@{/}">Rural Health</a>
+
+        <nav class="site-nav">
+            <!-- Dashboard is OFFICER only -->
+            <a th:href="@{/dashboard}" sec:authorize="hasRole('OFFICER')">Dashboard</a>
+
+            <!-- Healthcare modules -->
+            <a th:href="@{/residents}">Residents</a>
+            <a th:href="@{/centres}">Centres</a>
+            <a th:href="@{/appointments}">Appointments</a>
+            <a th:href="@{/camps}">Camps</a>
+
+            <!-- Public Health modules -->
+            <a th:href="@{/medicines}">Medicines</a>
+            <a th:href="@{/replenishments}">Replenishment</a>
+            <a th:href="@{/sanitation/facilities}">Facilities</a>
+            <a th:href="@{/sanitation/complaints}">Complaints</a>
+            <a th:href="@{/water}">Water</a>
+        </nav>
+
+        <!-- Signed-in user and logout. Logout must be a POST; th:action adds the CSRF token -->
+        <div class="site-header__user">
+            <span sec:authentication="name">user</span>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn--ghost btn--small">Log out</button>
+            </form>
+        </div>
+
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- Flash messages set by controllers after a POST -->
+    <div class="alert" th:if="${successMessage}" th:text="${successMessage}">Saved.</div>
+    <div class="alert alert--error" th:if="${errorMessage}" th:text="${errorMessage}">Error.</div>
+
+    <!-- Shown when the Public Health service could not be reached.
+         The null check is needed because many pages never set this attribute. -->
+    <div class="alert alert--warning"
+         th:if="${publicHealthAvailable != null and !publicHealthAvailable}">
+        The Public Health service is not responding. Medicine, sanitation and water
+        information may be missing until it is back.
+    </div>
+
+    <!-- Page content is inserted here -->
+    <th:block th:replace="${content}">
+        <p>Page content goes here.</p>
+    </th:block>
+
+</main>
+
+<footer class="site-footer">
+    <div class="container">Integrated Rural Health and Sanitation Management System</div>
+</footer>
+
+</body>
+</html>
