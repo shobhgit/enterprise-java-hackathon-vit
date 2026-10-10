@@ -1,5 +1,6 @@
 
 <!DOCTYPE html>
+<!-- lang='en' tells the computer the page language is English -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Error Page</title>
@@ -9,13 +10,13 @@
 <!-- Page heading -->
 <h2>Something Went Wrong</h2>
 
-<!-- Show a friendly error message -->
+<!-- This show error message -->
 <p>Sorry, an error occurred while processing your request.</p>
 
 <!-- Show the error message if available -->
 <p th:if="${errorMessage}" th:text="${errorMessage}"></p>
 
-<!-- Link to return to the home page -->
+<!--  Go back to the home page -->
 <a th:href="@{/}">Go to Home Page</a>
 
 </body>
