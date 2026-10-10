@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!-- The 'lang="en"' attribute satisfies accessibility requirements and clears IDE validation errors -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Character encoding meta tag defines the character set for the document -->
+    <meta charset="UTF-8">
+    <title>Add Water Record</title>
+</head>
+<body>
+
+<!-- Page heading -->
+<h2>Add Water Record</h2>
+
+<!-- Form to submit water details -->
+<form th:action="@{/water}" method="post">
+
+    <!-- Enter the location: Linked using for="location" and id="location" -->
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location" required>
+    <br><br>
+
+    <!-- Select the water source: Linked using for="source" and id="source" -->
+    <label for="source">Water Source:</label>
+    <select id="source" name="source" required>
+        <option value="">Select Source</option>
+        <option value="WELL">Well</option>
+        <option value="BOREWELL">Borewell</option>
+        <option value="TAP">Tap</option>
+        <option value="TANK">Tank</option>
+        <option value="RIVER">River</option>
+    </select>
+    <br><br>
+
+    <!-- Enter water supply information: Linked using for="supplyInfo" and id="supplyInfo" -->
+    <label for="supplyInfo">Supply Information:</label>
+    <textarea id="supplyInfo" name="supplyInfo"></textarea>
+    <br><br>
+
+    <!-- Select the observation date: Linked using for="observedOn" and id="observedOn" -->
+    <label for="observedOn">Observed On:</label>
+    <input type="date" id="observedOn" name="observedOn" required>
+    <br><br>
+
+    <!-- Select water quality status: Linked using for="qualityStatus" and id="qualityStatus" -->
+    <label for="qualityStatus">Quality Status:</label>
+    <select id="qualityStatus" name="qualityStatus" required>
+        <option value="SAFE">Safe</option>
+        <option value="UNSAFE">Unsafe</option>
+        <option value="UNDER_REVIEW">Under Review</option>
+    </select>
+    <br><br>
+
+    <!-- Describe any water quality issue: Linked using for="issueDescription" and id="issueDescription" -->
+    <label for="issueDescription">Issue Description:</label>
+    <textarea id="issueDescription" name="issueDescription"></textarea>
+    <br><br>
+
+    <!-- Enter the reporter's name: Linked using for="reportedBy" and id="reportedBy" -->
+    <label for="reportedBy">Reported By:</label>
+    <input type="text" id="reportedBy" name="reportedBy" required>
+    <br><br>
+
+    <!-- Submit the record -->
+    <button type="submit">Save Record</button>
+
+</form>
+
+<!-- Return to water records -->
+<br>
+<a th:href="@{/water}">Back to Water Records</a>
+
+</body>
+</html>

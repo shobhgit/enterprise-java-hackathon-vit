@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sanitation Complaints</title>
+</head>
+<body>
+
+<!-- Page heading -->
+<h2>Sanitation Complaints</h2>
+
+<!-- Link to report a complaint -->
+<a th:href="@{/sanitation/complaints/new}">Report Complaint</a>
+
+<!-- Table to display complaints -->
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Facility</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Date</th>
+    </tr>
+
+    <!-- Display each complaint -->
+    <tr th:each="complaint : ${complaints}">
+        <td th:text="${complaint.id}"></td>
+        <td th:text="${complaint.facilityName}"></td>
+        <td th:text="${complaint.description}"></td>
+        <td th:text="${complaint.status}"></td>
+        <td th:text="${complaint.createdAt}"></td>
+    </tr>
+</table>
+
+<!-- Message when there are no complaints -->
+<p th:if="${#lists.isEmpty(complaints)}">
+    No complaints found.
+</p>
+
+<!-- Return to facility list -->
+<br>
+<a th:href="@{/sanitation/facilities}">Back to Facilities</a>
+
+</body>
+</html>

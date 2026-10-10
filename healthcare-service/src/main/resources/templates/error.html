@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error Page</title>
+</head>
+<body>
+
+<!-- Page heading -->
+<h2>Something Went Wrong</h2>
+
+<!-- Show a friendly error message -->
+<p>Sorry, an error occurred while processing your request.</p>
+
+<!-- Show the error message if available -->
+<p th:if="${errorMessage}" th:text="${errorMessage}"></p>
+
+<!-- Link to return to the home page -->
+<a th:href="@{/}">Go to Home Page</a>
+
+</body>
+</html>

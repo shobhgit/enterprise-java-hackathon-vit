@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Water Quality Records</title>
+</head>
+<body>
+
+<!-- Page heading -->
+<h2>Water Quality Records</h2>
+
+<!-- Link to add a new record -->
+<a th:href="@{/water/new}">Add Water Record</a>
+
+<!-- Table to display water records -->
+<table>
+    <tr>
+        <th>Location</th>
+        <th>Source</th>
+        <th>Quality</th>
+        <th>Observed On</th>
+        <th>Action Status</th>
+    </tr>
+
+    <!-- Display each water record -->
+    <tr th:each="record : ${records}">
+        <td th:text="${record.location}"></td>
+        <td th:text="${record.source}"></td>
+        <td th:text="${record.qualityStatus}"></td>
+        <td th:text="${record.observedOn}"></td>
+        <td th:text="${record.actionStatus}"></td>
+    </tr>
+</table>
+
+<!-- Message when no records are available -->
+<p th:if="${#lists.isEmpty(records)}">
+    No water records found.
+</p>
+
+</body>
+</html>

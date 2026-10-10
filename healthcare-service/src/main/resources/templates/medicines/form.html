@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Medicine</title>
+</head>
+<body>
+
+<h2>Add Medicine</h2>
+
+<form th:action="@{/medicines}" th:object="${medicine}" method="post">
+
+    <!-- Here we enter medicine name -->
+    <label for="name">Medicine Name:</label>
+    <input type="text" id="name" th:field="*{name}" required>
+    <br><br>
+
+    <!-- Here we select medicine or supply -->
+    <label for="type">Type:</label>
+    <select id="type" th:field="*{type}" required>
+        <option value="MEDICINE">Medicine</option>
+        <option value="SUPPLY">Supply</option>
+    </select>
+    <br><br>
+
+    <!-- Here we enter unit of medicine or supply -->
+    <label for="unit">Unit:</label>
+    <input type="text" id="unit" th:field="*{unit}" required>
+    <br><br>
+
+    <!-- Quantity -->
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" th:field="*{quantity}" min="0" required>
+    <br><br>
+
+    <!-- Reorder Level -->
+    <label for="reorderLevel">Reorder Level:</label>
+    <input type="number" id="reorderLevel" th:field="*{reorderLevel}" min="0" required>
+    <br><br>
+
+    <!-- Which Health Center medicine belong -->
+    <label for="healthCentreId">Health Centre:</label>
+    <select id="healthCentreId" th:field="*{healthCentreId}" required>
+        <option value="">Select Health Centre</option>
+        <option th:each="centre : ${centres}"
+                th:value="${centre.id}"
+                th:text="${centre.name}">
+        </option>
+    </select>
+    <br><br>
+
+    <button type="submit">Save Medicine</button>
+
+</form>
+
+<br>
+<a th:href="@{/medicines}">Back to Medicine List</a>
+
+</body>
+</html>

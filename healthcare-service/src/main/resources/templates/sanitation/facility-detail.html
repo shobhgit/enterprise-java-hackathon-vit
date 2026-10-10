@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Facility Details</title>
+</head>
+<body>
+
+<!-- Page heading -->
+<h2>Facility Details</h2>
+
+<!-- Show facility information -->
+<p>Name: <span th:text="${facility.name}"></span></p>
+<p>Type: <span th:text="${facility.type}"></span></p>
+<p>Location: <span th:text="${facility.location}"></span></p>
+<p>Status: <span th:text="${facility.cleanlinessStatus}"></span></p>
+
+<!-- Show maintenance history -->
+<h3>Maintenance Records</h3>
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Description</th>
+    </tr>
+
+    <!-- Display each maintenance record -->
+    <tr th:each="record : ${maintenanceRecords}">
+        <td th:text="${record.createdAt}"></td>
+        <td th:text="${record.description}"></td>
+    </tr>
+</table>
+
+<!-- Message if no records exist -->
+<p th:if="${#lists.isEmpty(maintenanceRecords)}">
+    No maintenance records found.
+</p>
+
+<!-- Return to facility list -->
+<br>
+<a th:href="@{/sanitation/facilities}">Back to Facilities</a>
+
+</body>
+</html>

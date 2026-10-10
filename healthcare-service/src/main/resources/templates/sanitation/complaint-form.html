@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- The 'lang="en"' attribute satisfies accessibility requirements and clears IDE validation errors -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Character encoding meta tag defines the character set for the document -->
+    <meta charset="UTF-8">
+    <title>Report Complaint</title>
+</head>
+<body>
+
+<!-- Page heading -->
+<h2>Report Sanitation Complaint</h2>
+
+<!-- Form to submit a complaint -->
+<form th:action="@{/sanitation/complaints}" method="post">
+
+    <!-- Select the facility: Linked using for="facilityId" and id="facilityId" -->
+    <label for="facilityId">Facility:</label>
+    <select id="facilityId" name="facilityId" required>
+        <option value="">Select Facility</option>
+        <!-- Dynamic loop using Thymeleaf to pull available sanitation facilities passed from the controller -->
+        <option th:each="facility : ${facilities}"
+                th:value="${facility.id}"
+                th:text="${facility.name}">
+        </option>
+    </select>
+    <br><br>
+
+    <!-- Describe the problem: Linked using for="description" and id="description" -->
+    <label for="description">Description:</label>
+    <textarea id="description" name="description" required></textarea>
+    <br><br>
+
+    <!-- Enter the name of the person reporting: Linked using for="reportedBy" and id="reportedBy" -->
+    <label for="reportedBy">Reported By:</label>
+    <input type="text" id="reportedBy" name="reportedBy" required>
+    <br><br>
+
+    <!-- Submit the complaint -->
+    <button type="submit">Submit Complaint</button>
+
+</form>
+
+<!-- Return to complaints list -->
+<br>
+<a th:href="@{/sanitation/complaints}">Back to Complaints</a>
+
+</body>
+</html>
