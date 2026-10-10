@@ -6,10 +6,10 @@
 </head>
 <body>
 
-<!-- Page heading -->
+<!-- This is page heading -->
 <h2>Sanitation Complaints</h2>
 
-<!-- Link to report a complaint -->
+<!-- Tell the developer next line create a link for reporting a complaint -->
 <a th:href="@{/sanitation/complaints/new}">Report Complaint</a>
 
 <!-- Table to display complaints -->
@@ -32,7 +32,7 @@
     </tr>
 </table>
 
-<!-- Message when there are no complaints -->
+<!--  Message when there are no complaints -->
 <p th:if="${#lists.isEmpty(complaints)}">
     No complaints found.
 </p>
