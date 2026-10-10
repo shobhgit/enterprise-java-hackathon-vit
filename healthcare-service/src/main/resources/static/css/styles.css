@@ -1,14 +1,20 @@
 /* Shared styles for the Healthcare Service pages */
 
+/* Colours: change them here only */
 :root {
-    --green: #245C4A;
-    --ivory: #F7F5EF;
-    --text: #303536;
-    --sage: #DCE8DF;
-    --terracotta: #B96B52;
-    --border: #C9D6CC;
+    --primary: #4A4E9B;        /* navbar, main buttons, links */
+    --primary-dark: #3B3F82;   /* hover state for primary items */
+    --secondary: #A89BD9;      /* accents: focus ring, ghost button edge */
+    --bg: #F9F8F6;             /* page background */
+    --surface: #E8E6F0;        /* cards, table headers, panels */
+    --text: #2E2E3A;           /* headings and body text */
+    --muted: #6B6B7B;          /* footer and secondary text */
+    --border: #D5D2E2;         /* thin lines around tables, inputs, cards */
+    --alert: #B96B52;          /* errors and warnings */
+    --alert-bg: #F6E6E0;       /* pale background for error boxes */
 }
 
+/* Base */
 * { box-sizing: border-box; }
 
 body {
@@ -16,19 +22,22 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--ivory);
+    background: var(--bg);
     color: var(--text);
     font-family: Arial, sans-serif;
     line-height: 1.5;
 }
 
-a { color: var(--green); }
+a { color: var(--primary); }
+a:hover { color: var(--primary-dark); }
 h1 { font-size: 1.6rem; margin: 0 0 1rem; }
+h2 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+
 .container { max-width: 1100px; margin: 0 auto; padding: 0 1rem; width: 100%; }
 main.container { flex: 1; padding-top: 1.5rem; padding-bottom: 2rem; }
 
 /* Header and navigation */
-.site-header { background: var(--green); color: #fff; }
+.site-header { background: var(--primary); color: #fff; }
 .site-header__inner {
     max-width: 1100px;
     margin: 0 auto;
@@ -40,39 +49,54 @@ main.container { flex: 1; padding-top: 1.5rem; padding-bottom: 2rem; }
 }
 .site-header__brand { color: #fff; font-weight: bold; text-decoration: none; }
 .site-nav { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; flex: 1; }
-.site-nav a { color: var(--sage); text-decoration: none; font-size: 0.95rem; }
+.site-nav a { color: var(--surface); text-decoration: none; font-size: 0.95rem; }
+.site-nav a:hover { color: #fff; text-decoration: underline; }
 .site-header__user { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; }
 .site-header__user form { margin: 0; }
 
 /* Page header, cards, tables */
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
 .page-header h1 { margin: 0; }
-.card { background: var(--sage); border: 1px solid var(--border); padding: 1rem; margin-bottom: 1rem; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; margin-bottom: 1rem; }
+.card p { margin: 0 0 0.4rem; }
+.login-box { max-width: 460px; margin: 1.5rem auto; }
 table { width: 100%; border-collapse: collapse; background: #fff; }
 th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
-th { background: var(--sage); }
+th { background: var(--surface); }
+tbody tr:hover { background: var(--bg); }
 
 /* Forms */
 .form { max-width: 540px; }
 .field { margin-bottom: 1rem; }
 .field label { display: block; margin-bottom: 0.25rem; font-weight: bold; }
-input, select, textarea { width: 100%; padding: 0.5rem; font: inherit; border: 1px solid var(--border); }
-.field__error { color: var(--terracotta); font-size: 0.85rem; }
+input, select, textarea { width: 100%; padding: 0.5rem; font: inherit; border: 1px solid var(--border); border-radius: 4px; }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--secondary); border-color: var(--primary); }
+.field__error { color: var(--alert); font-size: 0.85rem; }
 .inline-form { display: inline-flex; gap: 0.5rem; margin: 0; }
 .inline-form select, .inline-form input { width: auto; }
 
 /* Buttons */
-.btn { padding: 0.5rem 1rem; font: inherit; color: #fff; background: var(--green); border: 1px solid var(--green); text-decoration: none; cursor: pointer; }
-.btn--ghost { background: transparent; border-color: var(--sage); }
+.btn { padding: 0.5rem 1rem; font: inherit; color: #fff; background: var(--primary); border: 1px solid var(--primary); border-radius: 4px; text-decoration: none; cursor: pointer; }
+.btn:hover { background: var(--primary-dark); border-color: var(--primary-dark); color: #fff; }
+.btn--ghost { background: transparent; border-color: var(--secondary); }
 .btn--small { padding: 0.25rem 0.6rem; font-size: 0.85rem; }
-.btn--danger { background: var(--terracotta); border-color: var(--terracotta); }
+.btn--danger { background: var(--alert); border-color: var(--alert); }
+.btn--danger:hover { background: #9E5640; border-color: #9E5640; }
 
 /* Alerts and badges */
-.alert { padding: 0.7rem 1rem; margin-bottom: 1rem; border-left: 4px solid var(--green); background: var(--sage); }
-.alert--error, .alert--warning { border-color: var(--terracotta); background: #F6E6E0; }
-.badge { padding: 0.1rem 0.5rem; font-size: 0.8rem; background: var(--sage); }
-.badge--alert { background: #F6E6E0; }
+.alert { padding: 0.7rem 1rem; margin-bottom: 1rem; border-left: 4px solid var(--primary); background: var(--surface); border-radius: 4px; }
+.alert--error, .alert--warning { border-color: var(--alert); background: var(--alert-bg); }
+.badge { padding: 0.1rem 0.5rem; font-size: 0.8rem; background: var(--surface); border-radius: 4px; }
+.badge--alert { background: var(--alert-bg); }
 
-.site-footer { padding: 1rem 0; border-top: 1px solid var(--border); font-size: 0.85rem; }
+.site-footer { padding: 1rem 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
 
-/* Frontend B: add styles below this line only */
+
+.login-box { max-width: 460px; margin: 1.5rem auto; }
+
+/* Dashboard number tiles */
+.stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.stat { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 0.9rem 1rem; }
+.stat__value { display: block; font-size: 1.8rem; font-weight: bold; color: var(--primary); line-height: 1.1; }
+.stat__label { color: var(--muted); font-size: 0.9rem; }
+.stat--alert .stat__value { color: var(--alert); }
