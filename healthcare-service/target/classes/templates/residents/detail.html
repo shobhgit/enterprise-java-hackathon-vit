@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!--
+    Route: GET /residents/{id}
+    the page displays a particular resident using the specified id
+    resident contains the selected resident's information.
+    appointments contains that resident's appointment records.
+    consultations contains the resident's previous medical visits
+    Model: resident, consultations , appointments
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Resident details</title>
+</head>
+<body>
+<section>
+
+    <div class="page-header">
+        <h1 th:text="${resident.fullName}">Resident name</h1>
+        <a class="btn" th:href="@{/appointments/new}">Book appointment</a>
+    </div>
+
+    <!-- basic details  -->
+    <div class="card">
+        <p><strong>Date of birth:</strong> <span th:text="${resident.dateOfBirth}">2000-01-01</span></p>
+        <p><strong>Gender:</strong> <span th:text="${resident.gender}">MALE</span></p>
+        <p><strong>Phone:</strong> <span th:text="${resident.phone}">Phone</span></p>
+        <p><strong>Village:</strong> <span th:text="${resident.village}">Village</span></p>
+        <p><strong>Address:</strong> <span th:text="${resident.address}">Address</span></p>
+    </div>
+
+    <!-- Appointments of  resident -->
+    <h2>Appointments</h2>
+    <table th:if="${!#lists.isEmpty(appointments)}">
+        <thead>
+        <tr><th>Date</th><th>Health centre</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${appointments}">
+            <td th:text="${#temporals.format(a.scheduledAt, 'dd MMM yyyy, HH:mm')}">Date</td>
+            <td th:text="${a.healthCentre.name}">Centre</td>
+            <td><span class="badge" th:text="${a.status}">SCHEDULED</span></td>
+            <td><a th:href="@{/appointments/{id}(id=${a.id})}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(appointments)}">No appointments yet.</p>
+
+    <!-- Visit history of  resident-->
+    <h2>Visit history</h2>
+    <table th:if="${!#lists.isEmpty(consultations)}">
+        <thead>
+        <tr><th>Date</th><th>Diagnosis</th><th>Treatment</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${consultations}">
+            <td th:text="${c.consultedOn}">Date</td>
+            <td th:text="${c.diagnosis}">Diagnosis</td>
+            <td th:text="${c.treatment}">Treatment</td>
+        </tr>
+        </tbody>
+    </table>
+    <!-- list is empty if the resident has no visit history-->
+    <p th:if="${#lists.isEmpty(consultations)}">No visits recorded yet.</p>
+
+    <p><a th:href="@{/residents}">Back to residents</a></p>
+
+</section>
+</body>
+</html>

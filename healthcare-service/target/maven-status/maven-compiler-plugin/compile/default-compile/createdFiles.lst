@@ -1,0 +1,5 @@
+com\ruralhealth\healthcare\repository\HealthWorkerRepository.class
+com\ruralhealth\healthcare\controllers\LoginController.class
+com\ruralhealth\healthcare\config\DemoDataInitializer.class
+com\ruralhealth\healthcare\repository\CampBeneficiaryRepository.class
+com\ruralhealth\healthcare\client\PublicHealthClient$7.class

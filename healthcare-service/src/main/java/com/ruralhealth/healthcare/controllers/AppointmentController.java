@@ -4,6 +4,7 @@ package com.ruralhealth.healthcare.controller;
 import com.ruralhealth.healthcare.dto.AppointmentForm;
 import com.ruralhealth.healthcare.dto.ConsultationForm;
 import com.ruralhealth.healthcare.entity.Appointment;
+import com.ruralhealth.healthcare.entity.enums.AppointmentStatus;
 import com.ruralhealth.healthcare.repository.HealthWorkerRepository;
 import com.ruralhealth.healthcare.service.AppointmentService;
 import com.ruralhealth.healthcare.service.HealthCentreService;
@@ -38,10 +39,10 @@ public class AppointmentController {
     }
 
     @GetMapping("/appointments")
-    public String listAppointments(Model model) {
+    public String listAppointments(@RequestParam(required = false) AppointmentStatus status, Model model) {
         model.addAttribute(
                 "appointments",
-                appointmentService.getAllAppointments()
+                status == null ? appointmentService.getAllAppointments() : appointmentService.getAppointmentsByStatus(status)
         );
 
         return "appointments/list";
@@ -67,8 +68,7 @@ public class AppointmentController {
             return "appointments/form";
         }
 
-        Appointment savedAppointment =
-                appointmentService.createAppointment(form);
+        Appointment savedAppointment = appointmentService.createAppointment(form);
 
         redirectAttributes.addFlashAttribute(
                 "successMessage",
@@ -87,8 +87,17 @@ public class AppointmentController {
                 "appointment",
                 appointmentService.getAppointmentById(id)
         );
+        model.addAttribute("consultation", appointmentService.getConsultationForAppointment(id));
 
         return "appointments/detail";
+    }
+
+    @PostMapping("/appointments/{id}/status")
+    public String updateAppointmentStatus(@PathVariable Long id, @RequestParam AppointmentStatus status,
+                                          RedirectAttributes redirectAttributes) {
+        appointmentService.updateStatus(id, status);
+        redirectAttributes.addFlashAttribute("successMessage", "Appointment cancelled.");
+        return "redirect:/appointments/" + id;
     }
 
     @GetMapping("/appointments/{id}/consultation")

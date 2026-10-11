@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head><title>Service unavailable</title></head>
+<body>
+<section class="card form-card">
+    <span class="eyebrow">Connection issue</span>
+    <h1>We couldn’t complete that request</h1>
+    <p class="intro" th:text="${errorMessage}">Please try again in a moment.</p>
+    <div class="form-actions">
+        <a class="btn" th:href="@{/dashboard}">Return to overview</a>
+        <a class="btn btn--secondary" th:href="@{/medicines}">Try again</a>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head><title>Medicine details</title></head>
+<body><section>
+    <div class="page-header">
+        <div><span class="eyebrow">Medicine inventory</span><h1 th:text="${medicine.name}">Medicine</h1><p th:text="${medicine.healthCentreName}">Health centre</p></div>
+        <a class="btn btn--secondary" th:href="@{/medicines}">← Back to inventory</a>
+    </div>
+    <div class="stat-row">
+        <div class="stat"><span class="stat__value" th:text="${medicine.quantity}">0</span><span class="stat__label" th:text="${medicine.unit + ' available'}">Units available</span></div>
+        <div class="stat"><span class="stat__value" th:text="${medicine.reorderLevel}">0</span><span class="stat__label">Reorder level</span></div>
+        <div class="stat"><span class="stat__value" th:text="${medicine.type}">MEDICINE</span><span class="stat__label">Inventory type</span></div>
+        <div class="stat"><span th:class="${medicine.lowStock} ? 'badge badge--alert' : 'badge badge--success'" th:text="${medicine.lowStock} ? 'Reorder needed' : 'Stock healthy'">Stock</span></div>
+    </div>
+    <div class="content-grid">
+        <section class="card">
+            <h2>Issue stock</h2>
+            <form th:action="@{/medicines/{id}/issue(id=${medicine.id})}" method="post" class="form">
+                <div class="field-grid">
+                    <div class="field"><label for="issue-quantity">Quantity</label><input id="issue-quantity" name="quantity" type="number" min="1" th:attr="max=${medicine.quantity}" required></div>
+                    <div class="field"><label for="issued-on">Issue date</label><input id="issued-on" name="issuedOn" type="date" required></div>
+                    <div class="field"><label for="issued-to">Issued to</label><input id="issued-to" name="issuedTo" type="text" placeholder="Clinic, camp or resident" required></div>
+                    <div class="field"><label for="issue-reason">Note</label><input id="issue-reason" name="reason" type="text" placeholder="Optional context"></div>
+                </div>
+                <button class="btn" type="submit">Record issue</button>
+            </form>
+        </section>
+        <section class="card">
+            <h2>Receive stock</h2>
+            <form th:action="@{/medicines/{id}/restock(id=${medicine.id})}" method="post" class="form">
+                <div class="field"><label for="restock-quantity">Quantity received</label><input id="restock-quantity" name="quantity" type="number" min="1" required></div>
+                <div class="field"><label for="restock-note">Delivery note</label><textarea id="restock-note" name="note" placeholder="Optional batch or supplier note"></textarea></div>
+                <button class="btn btn--secondary" type="submit">Add stock</button>
+            </form>
+        </section>
+    </div>
+    <div class="section-heading"><div><span class="eyebrow">Audit trail</span><h2>Recent issues</h2></div></div>
+    <div class="table-wrap" th:if="${!#lists.isEmpty(issues)}">
+        <table><thead><tr><th>Date</th><th>Issued to</th><th>Quantity</th><th>Remaining</th><th>Note</th></tr></thead>
+            <tbody><tr th:each="issue : ${issues}">
+                <td th:text="${issue.issuedOn}">Date</td><td th:text="${issue.issuedTo}">Recipient</td>
+                <td th:text="${issue.quantity}">0</td><td th:text="${issue.remainingQuantity}">0</td><td th:text="${issue.reason}">Note</td>
+            </tr></tbody>
+        </table>
+    </div>
+    <p class="empty-state" th:if="${#lists.isEmpty(issues)}">No medicine issues recorded yet.</p>
+</section></body>
+</html>

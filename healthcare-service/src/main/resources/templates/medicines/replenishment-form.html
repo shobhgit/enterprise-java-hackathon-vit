@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head><title>New stock request</title></head>
+<body><section>
+    <div class="page-header"><div><span class="eyebrow">Supply chain</span><h1>Request replenishment</h1><p>Send a stock request to the public health supply queue.</p></div>
+        <a class="btn btn--secondary" th:href="@{/replenishments}">← Back to requests</a></div>
+    <form class="form" th:action="@{/replenishments}" method="post">
+        <div class="field"><label for="medicineId">Medicine or supply</label><select id="medicineId" name="medicineId" required>
+            <option value="">Choose an inventory item</option><option th:each="medicine : ${medicines}" th:value="${medicine.id}" th:text="${medicine.name + ' · ' + medicine.healthCentreName}">Item</option>
+        </select></div>
+        <div class="field"><label for="quantity">Quantity requested</label><input id="quantity" name="quantity" type="number" min="1" required></div>
+        <div class="field"><label for="reason">Reason for request</label><textarea id="reason" name="reason" rows="4" placeholder="For example: low stock ahead of the village health camp" required></textarea></div>
+        <div class="form-actions"><button class="btn" type="submit">Submit request</button><a class="btn btn--secondary" th:href="@{/replenishments}">Cancel</a></div>
+    </form>
+</section></body>
+</html>

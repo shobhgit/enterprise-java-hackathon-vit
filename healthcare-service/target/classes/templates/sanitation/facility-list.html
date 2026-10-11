@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head><title>Sanitation facilities</title></head>
+<body><section>
+    <div class="page-header">
+        <div><span class="eyebrow">Public Health · Sanitation</span><h1>Community facilities</h1><p>Keep shared toilets, water points, drains and waste sites safe and maintained.</p></div>
+        <div class="hero__actions"><a class="btn btn--secondary" th:href="@{/sanitation/complaints}">View reports</a><a class="btn" th:href="@{/sanitation/facilities/new}">＋ Add facility</a></div>
+    </div>
+    <div class="table-wrap" th:if="${!#lists.isEmpty(facilities)}">
+        <table><thead><tr><th>Facility</th><th>Type</th><th>Location</th><th>Condition</th><th>Last maintained</th><th></th></tr></thead>
+            <tbody><tr th:each="facility : ${facilities}">
+                <td><strong th:text="${facility.name}">Facility</strong></td><td th:text="${facility.type}">TOILET</td>
+                <td th:text="${facility.location}">Location</td>
+                <td><span th:class="${facility.cleanlinessStatus == 'CLEAN'} ? 'badge badge--success' : 'badge badge--alert'" th:text="${facility.cleanlinessStatus}">CLEAN</span></td>
+                <td th:text="${facility.lastMaintenanceDate ?: '—'}">Date</td><td><a th:href="@{/sanitation/facilities/{id}(id=${facility.id})}">Manage →</a></td>
+            </tr></tbody>
+        </table>
+    </div>
+    <p class="empty-state" th:if="${#lists.isEmpty(facilities)}">No public facilities added yet. Add the facilities your team monitors.</p>
+</section></body>
+</html>

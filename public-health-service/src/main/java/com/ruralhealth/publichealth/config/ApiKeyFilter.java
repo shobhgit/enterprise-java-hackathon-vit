@@ -10,7 +10,8 @@ import java.io.IOException;
 public class ApiKeyFilter extends OncePerRequestFilter {
  @Value("${publichealth.api-key}") private String expectedKey;
  @Override protected boolean shouldNotFilter(HttpServletRequest request){
-   return "GET".equalsIgnoreCase(request.getMethod()) && "/api/ping".equals(request.getRequestURI());
+   String path=request.getRequestURI();
+   return !path.startsWith("/api/") || ("GET".equalsIgnoreCase(request.getMethod()) && "/api/ping".equals(path));
  }
  @Override protected void doFilterInternal(HttpServletRequest request,HttpServletResponse response,FilterChain chain)
    throws ServletException,IOException {

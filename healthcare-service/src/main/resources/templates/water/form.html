@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head><title>Record water observation</title></head>
+<body><section>
+    <div class="page-header"><div><span class="eyebrow">Public Health · Water quality</span><h1>Record an observation</h1><p>Capture a water check and flag any issue for follow-up.</p></div>
+        <a class="btn btn--secondary" th:href="@{/water}">← Water monitoring</a></div>
+    <form class="form" th:action="@{/water}" method="post">
+        <div class="field-grid">
+            <div class="field"><label for="location">Location</label><input id="location" name="location" placeholder="Village, street or facility" required></div>
+            <div class="field"><label for="source">Water source</label><select id="source" name="source" required><option value="">Choose a source</option><option value="WELL">Well</option><option value="BOREWELL">Borewell</option><option value="TAP">Tap</option><option value="TANK">Storage tank</option><option value="RIVER">River</option></select></div>
+            <div class="field"><label for="observedOn">Date observed</label><input id="observedOn" name="observedOn" type="date" required></div>
+            <div class="field"><label for="qualityStatus">Quality result</label><select id="qualityStatus" name="qualityStatus" required><option value="SAFE">Safe</option><option value="UNDER_REVIEW">Under review</option><option value="UNSAFE">Unsafe</option></select></div>
+        </div>
+        <div class="field"><label for="supplyInfo">Supply details <span style="color:var(--muted);font-weight:400;">(optional)</span></label><input id="supplyInfo" name="supplyInfo" placeholder="Who or what the source serves"></div>
+        <div class="field"><label for="issueDescription">Finding or concern <span style="color:var(--muted);font-weight:400;">(optional)</span></label><textarea id="issueDescription" name="issueDescription" rows="3" placeholder="Describe any smell, colour, interruption or test result"></textarea></div>
+        <div class="field"><label for="reportedBy">Recorded by</label><input id="reportedBy" name="reportedBy" placeholder="Your name or team" required></div>
+        <div class="form-actions"><button class="btn" type="submit">Save observation</button><a class="btn btn--secondary" th:href="@{/water}">Cancel</a></div>
+    </form>
+</section></body>
+</html>

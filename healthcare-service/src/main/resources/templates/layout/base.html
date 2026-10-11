@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html th:fragment="layout(title, content)" lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#10483f">
+    <title th:replace="${title}">RuralCare | Community health</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+<header class="site-header" sec:authorize="isAuthenticated()">
+    <div class="site-header__inner">
+        <a class="site-header__brand" th:href="@{/dashboard}">
+            <span class="brand-mark" aria-hidden="true">+</span>
+            <span class="brand-copy">RuralCare<small>Community health</small></span>
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+            <a th:href="@{/dashboard}" sec:authorize="hasRole('OFFICER')">Overview</a>
+            <a th:href="@{/residents}">Residents</a>
+            <a th:href="@{/centres}">Centres</a>
+            <a th:href="@{/appointments}">Appointments</a>
+            <a th:href="@{/camps}">Health camps</a>
+            <a th:href="@{/medicines}">Medicine</a>
+            <a th:href="@{/replenishments}">Stock requests</a>
+            <a th:href="@{/sanitation/facilities}">Facilities</a>
+            <a th:href="@{/sanitation/complaints}">Complaints</a>
+            <a th:href="@{/water}">Water</a>
+        </nav>
+        <div class="site-header__user">
+            <span sec:authentication="name">Staff</span>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn--ghost btn--small">Log out</button>
+            </form>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <div class="alert" th:if="${successMessage}" th:text="${successMessage}">Saved.</div>
+    <div class="alert alert--error" th:if="${errorMessage}" th:text="${errorMessage}">Something went wrong.</div>
+    <div class="alert alert--warning" th:if="${publicHealthAvailable != null and !publicHealthAvailable}">
+        Public Health is temporarily unavailable. Healthcare records still work; medicine, sanitation and water data will return when the service is back.
+    </div>
+    <th:block th:replace="${content}"><p>Page content goes here.</p></th:block>
+</main>
+
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <span>RuralCare · Integrated rural health and sanitation</span>
+        <span>Connected services · Healthcare + Public Health</span>
+    </div>
+</footer>
+</body>
+</html>

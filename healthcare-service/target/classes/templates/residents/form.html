@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!--
+    Routes: GET/residents/new -> displays HTML form
+    POST/residents->on clicking save button
+-->
+
+<!-- the purpose is to do data validation for each field -->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New resident</title>
+</head>
+<body>
+<section>
+
+    <h1>New resident</h1>
+    <form class="form" th:action="@{/residents}" th:object="${resident}" method="post">
+        <div class="field">
+            <label for="fullName">Full name</label>
+            <input id="fullName" type="text" th:field="*{fullName}">
+            <span class="field__error" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="dateOfBirth">Date of birth</label>
+            <input id="dateOfBirth" type="date" th:field="*{dateOfBirth}">
+            <span class="field__error" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="gender">Gender</label>
+            <select id="gender" th:field="*{gender}">
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+                <option value="OTHER">Other</option>
+            </select>
+            <span class="field__error" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" type="text" th:field="*{phone}">
+            <span class="field__error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="village">Village</label>
+            <input id="village" type="text" th:field="*{village}">
+            <span class="field__error" th:if="${#fields.hasErrors('village')}" th:errors="*{village}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="address">Address</label>
+            <input id="address" type="text" th:field="*{address}">
+            <span class="field__error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">Error</span>
+        </div>
+
+        <button type="submit" class="btn">Save</button>
+
+        <!-- takes the user back to the resident page without submitting the form if cancel is clicked-->
+        <a th:href="@{/residents}">Cancel</a>
+
+    </form>
+
+</section>
+</body>
+</html>

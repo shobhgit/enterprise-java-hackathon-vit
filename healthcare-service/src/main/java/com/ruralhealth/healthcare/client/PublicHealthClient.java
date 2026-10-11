@@ -37,4 +37,21 @@ public class PublicHealthClient {
                 .retrieve()
                 .body(new ParameterizedTypeReference<>() {});
     }
+
+    public Map<String, Object> get(String path) {
+        return restClient.get().uri(path).retrieve().body(new ParameterizedTypeReference<>() {});
+    }
+
+    public List<Map<String, Object>> getList(String path) {
+        return restClient.get().uri(path).retrieve().body(new ParameterizedTypeReference<>() {});
+    }
+
+    public Map<String, Object> post(String path, Map<String, Object> body) {
+        return restClient.post().uri(path).body(body).retrieve().body(new ParameterizedTypeReference<>() {});
+    }
+
+    public Map<String, Object> patch(String path, Map<String, Object> body) {
+        return restClient.patch().uri(path).body(body).retrieve().body(new ParameterizedTypeReference<>() {});
+    }
+
 }

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head><title>Record consultation</title></head>
+<body><section>
+    <div class="page-header">
+        <div><span class="eyebrow">Appointment · Consultation</span><h1>Record a consultation</h1>
+            <p><strong th:text="${appointment.resident.fullName}">Resident</strong> ·
+                <span th:text="${#temporals.format(appointment.scheduledAt, 'dd MMM yyyy, HH:mm')}">Appointment time</span></p>
+        </div>
+        <a class="btn btn--secondary" th:href="@{/appointments/{id}(id=${appointment.id})}">← Back to appointment</a>
+    </div>
+    <form class="form" th:action="@{/appointments/{id}/consultation(id=${appointment.id})}" th:object="${consultation}" method="post">
+        <div class="field">
+            <label for="diagnosis">Diagnosis / assessment</label>
+            <textarea id="diagnosis" th:field="*{diagnosis}" rows="4" required></textarea>
+            <span class="field__error" th:if="${#fields.hasErrors('diagnosis')}" th:errors="*{diagnosis}">Error</span>
+        </div>
+        <div class="field">
+            <label for="prescription">Treatment / prescription</label>
+            <textarea id="prescription" th:field="*{prescription}" rows="4"></textarea>
+            <span class="field__error" th:if="${#fields.hasErrors('prescription')}" th:errors="*{prescription}">Error</span>
+        </div>
+        <div class="field">
+            <label for="notes">Follow-up notes</label>
+            <textarea id="notes" th:field="*{notes}" rows="3"></textarea>
+            <span class="field__error" th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}">Error</span>
+        </div>
+        <div class="form-actions"><button class="btn" type="submit">Save consultation</button>
+            <a class="btn btn--secondary" th:href="@{/appointments/{id}(id=${appointment.id})}">Cancel</a></div>
+    </form>
+</section></body>
+</html>

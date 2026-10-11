@@ -1,0 +1,33 @@
+
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <!-- Page title -->
+  <title>Replenishment Requests</title>
+</head>
+<body><section>
+  <div class="page-header">
+    <div><span class="eyebrow">Public Health · Supply chain</span><h1>Replenishment requests</h1><p>Track low stock and keep essential supplies moving between centres.</p></div>
+    <a class="btn" th:href="@{/replenishments/new}">＋ New request</a>
+  </div>
+  <div class="table-wrap" th:if="${!#lists.isEmpty(requests)}">
+    <table><thead><tr><th>Item</th><th>Health centre</th><th>Quantity requested</th><th>Requested by</th><th>Status</th><th>Update</th></tr></thead>
+      <tbody><tr th:each="request : ${requests}">
+        <td><strong th:text="${request.medicineName}">Medicine</strong><div style="color:var(--muted);font-size:.8rem;" th:text="${request.remarks}">Reason</div></td>
+        <td th:text="${request.healthCentreName}">Centre</td><td th:text="${request.quantityRequested}">0</td><td th:text="${request.requestedBy}">Staff</td>
+        <td><span th:class="${request.status == 'RESOLVED'} ? 'badge badge--success' : 'badge badge--alert'" th:text="${request.status}">OPEN</span></td>
+        <td>
+          <form class="inline-form" th:if="${request.status != 'RESOLVED'}" th:action="@{/replenishments/{id}/status(id=${request.id})}" method="post">
+            <select name="status" aria-label="New request status">
+              <option value="IN_PROGRESS" th:selected="${request.status == 'OPEN'}">In progress</option>
+              <option value="RESOLVED">Resolved</option>
+            </select><button class="btn btn--small" type="submit">Save</button>
+          </form>
+          <span class="badge badge--success" th:if="${request.status == 'RESOLVED'}">Complete</span>
+        </td>
+      </tr></tbody>
+    </table>
+  </div>
+  <p class="empty-state" th:if="${#lists.isEmpty(requests)}">No replenishment requests yet. Create one when a centre needs supplies.</p>
+</section></body>
+</html>

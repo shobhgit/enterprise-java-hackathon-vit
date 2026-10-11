@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head><title>Add inventory item</title></head>
+<body><section>
+    <div class="page-header"><div><span class="eyebrow">Medicine inventory</span><h1>Add an item</h1><p>Enter the current stock level and reorder point for a health centre.</p></div>
+        <a class="btn btn--secondary" th:href="@{/medicines}">← Back to inventory</a></div>
+    <form class="form form-card" th:action="@{/medicines}" th:object="${medicine}" method="post">
+        <div class="field"><label for="name">Item name</label><input id="name" th:field="*{name}" placeholder="e.g. Oral rehydration salts" required></div>
+        <div class="field-grid">
+            <div class="field"><label for="type">Category</label><select id="type" th:field="*{type}" required><option value="MEDICINE">Medicine</option><option value="SUPPLY">Medical supply</option></select></div>
+            <div class="field"><label for="unit">Unit</label><input id="unit" th:field="*{unit}" placeholder="tablets, bottles, packs" required></div>
+            <div class="field"><label for="quantity">Available quantity</label><input id="quantity" type="number" min="0" th:field="*{quantity}" required></div>
+            <div class="field"><label for="reorderLevel">Reorder when at</label><input id="reorderLevel" type="number" min="0" th:field="*{reorderLevel}" required></div>
+        </div>
+        <div class="field"><label for="healthCentreId">Health centre</label>
+            <select id="healthCentreId" th:field="*{healthCentreId}" required><option value="">Choose a centre</option>
+                <option th:each="centre : ${centres}" th:value="${centre.id}" th:text="${centre.name}">Centre</option>
+            </select>
+        </div>
+        <div class="form-actions"><button class="btn" type="submit">Save inventory item</button><a class="btn btn--secondary" th:href="@{/medicines}">Cancel</a></div>
+    </form>
+</section></body>
+</html>

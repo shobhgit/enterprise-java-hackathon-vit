@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--
+    Routes: GET /camps/new
+     shows form
+     POST/camps
+     saves form
+    Model: camp
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Plan a camp</title>
+</head>
+<body>
+<section>
+
+    <h1>Plan a health camp</h1>
+
+    <form class="form" th:action="@{/camps}" th:object="${camp}" method="post">
+
+        <div class="field">
+            <label for="name">Camp name</label>
+            <input id="name" type="text" th:field="*{name}">
+            <span class="field__error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="location">Location</label>
+            <input id="location" type="text" th:field="*{location}">
+            <span class="field__error" th:if="${#fields.hasErrors('location')}" th:errors="*{location}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="startDate">Start date</label>
+            <input id="startDate" type="date" th:field="*{startDate}">
+            <span class="field__error" th:if="${#fields.hasErrors('startDate')}" th:errors="*{startDate}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="endDate">End date</label>
+            <input id="endDate" type="date" th:field="*{endDate}">
+            <span class="field__error" th:if="${#fields.hasErrors('endDate')}" th:errors="*{endDate}">Error</span>
+        </div>
+
+        <button type="submit" class="btn">Save camp</button>
+        <a th:href="@{/camps}">Cancel</a>
+
+    </form>
+
+</section>
+</body>
+</html>

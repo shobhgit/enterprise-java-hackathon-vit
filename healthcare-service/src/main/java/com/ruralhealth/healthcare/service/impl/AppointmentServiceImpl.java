@@ -53,10 +53,31 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
+    public List<Appointment> getAppointmentsByStatus(AppointmentStatus status) {
+        return appointmentRepository.findByStatus(status);
+    }
+
+    @Override
     public Appointment getAppointmentById(Long id) {
         return appointmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Appointment not found with ID: " + id));
+    }
+
+    @Override
+    public Consultation getConsultationForAppointment(Long appointmentId) {
+        return consultationRepository.findByAppointment_Id(appointmentId).orElse(null);
+    }
+
+    @Override
+    @Transactional
+    public void updateStatus(Long appointmentId, AppointmentStatus status) {
+        Appointment appointment = getAppointmentById(appointmentId);
+        if (appointment.getStatus() != AppointmentStatus.SCHEDULED || status != AppointmentStatus.CANCELLED) {
+            throw new IllegalArgumentException("Only scheduled appointments can be cancelled.");
+        }
+        appointment.setStatus(status);
+        appointmentRepository.save(appointment);
     }
 
     @Override

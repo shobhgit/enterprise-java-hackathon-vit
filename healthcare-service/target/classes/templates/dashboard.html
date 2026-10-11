@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head><title>Overview</title></head>
+<body>
+<section>
+    <div class="hero">
+        <div class="hero__content">
+            <span class="eyebrow">Your community at a glance</span>
+            <h1>Health &amp; sanitation overview</h1>
+            <p class="intro">Bring resident care, medicine availability, sanitation and water concerns into one clear view.</p>
+            <div class="hero__actions">
+                <a class="btn" th:href="@{/residents/new}">＋ Add resident</a>
+                <a class="btn btn--secondary" th:href="@{/sanitation/complaints/new}">Report a concern</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-row">
+        <div class="stat"><span class="stat__value" th:text="${totalResidents}">0</span><span class="stat__label">Residents registered</span></div>
+        <div class="stat"><span class="stat__value" th:text="${totalCentres}">0</span><span class="stat__label">Health centres</span></div>
+        <div class="stat"><span class="stat__value" th:text="${#lists.size(upcomingAppointments)}">0</span><span class="stat__label">Upcoming appointments</span></div>
+        <div class="stat"><span class="stat__value" th:text="${upcomingHealthCamps}">0</span><span class="stat__label">Planned health camps</span></div>
+    </div>
+
+    <div class="section-heading">
+        <div><span class="eyebrow">Community response</span><h2>Items that need attention</h2></div>
+        <a th:href="@{/replenishments}">View stock requests →</a>
+    </div>
+    <div class="stat-row">
+        <div class="stat stat--alert"><span class="stat__value" th:text="${openSanitationComplaints}">0</span><span class="stat__label">Open sanitation complaints</span></div>
+        <div class="stat stat--alert"><span class="stat__value" th:text="${openReplenishmentRequests}">0</span><span class="stat__label">Medicine replenishments</span></div>
+        <div class="stat stat--alert"><span class="stat__value" th:text="${waterIssuesPendingAction}">0</span><span class="stat__label">Water issues to review</span></div>
+        <div class="stat stat--alert"><span class="stat__value" th:text="${#lists.size(lowStockMedicines)}">0</span><span class="stat__label">Medicines below reorder level</span></div>
+    </div>
+
+    <div class="content-grid">
+        <section class="card">
+            <div class="card__header"><h2>Low medicine stock</h2><a th:href="@{/medicines}">Inventory →</a></div>
+            <div class="table-wrap" th:if="${!#lists.isEmpty(lowStockMedicines)}">
+                <table><thead><tr><th>Medicine</th><th>Centre</th><th>Available</th><th>Reorder at</th><th></th></tr></thead>
+                    <tbody><tr th:each="medicine : ${lowStockMedicines}">
+                        <td><strong th:text="${medicine.name}">Medicine</strong></td>
+                        <td th:text="${medicine.healthCentreName}">Centre</td>
+                        <td><span class="badge badge--alert" th:text="${medicine.quantity}">0</span></td>
+                        <td th:text="${medicine.reorderLevel}">0</td>
+                        <td><a th:href="@{/medicines/{id}(id=${medicine.id})}">View</a></td>
+                    </tr></tbody>
+                </table>
+            </div>
+            <p class="empty-state" th:if="${#lists.isEmpty(lowStockMedicines)}">No medicines are below their reorder level.</p>
+        </section>
+
+        <section class="card">
+            <div class="card__header"><h2>Recent reports</h2><a th:href="@{/sanitation/complaints}">All reports →</a></div>
+            <div class="empty-state" th:if="${#lists.isEmpty(recentPending)}">No open public health actions.</div>
+            <div th:each="item : ${recentPending}" style="padding: 12px 0; border-bottom: 1px solid var(--line);">
+                <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;">
+                    <span class="badge badge--info" th:text="${item.type}">WATER</span>
+                    <span class="badge badge--alert" th:text="${item.status}">OPEN</span>
+                </div>
+                <p style="margin:8px 0 0;font-size:.9rem;" th:text="${item.summary}">Report summary</p>
+            </div>
+        </section>
+    </div>
+
+    <div class="content-grid">
+        <section class="card">
+            <div class="card__header"><h2>Next appointments</h2><a th:href="@{/appointments}">Schedule →</a></div>
+            <div class="empty-state" th:if="${#lists.isEmpty(upcomingAppointments)}">No upcoming appointments scheduled.</div>
+            <div class="table-wrap" th:if="${!#lists.isEmpty(upcomingAppointments)}">
+                <table><thead><tr><th>When</th><th>Resident</th><th>Centre</th></tr></thead>
+                    <tbody><tr th:each="appointment : ${upcomingAppointments}">
+                        <td th:text="${#temporals.format(appointment.scheduledAt, 'dd MMM · HH:mm')}">Date</td>
+                        <td th:text="${appointment.resident.fullName}">Resident</td>
+                        <td th:text="${appointment.healthCentre.name}">Centre</td>
+                    </tr></tbody>
+                </table>
+            </div>
+        </section>
+        <section class="card">
+            <div class="card__header"><h2>Upcoming health camps</h2><a th:href="@{/camps}">All camps →</a></div>
+            <div class="empty-state" th:if="${#lists.isEmpty(upcomingCamps)}">No camps scheduled yet.</div>
+            <div th:each="camp : ${upcomingCamps}" style="padding: 11px 0;border-bottom:1px solid var(--line);">
+                <strong th:text="${camp.name}">Camp</strong>
+                <div style="color:var(--muted);font-size:.86rem;" th:text="${camp.location + ' · ' + camp.startDate}">Location · Date</div>
+            </div>
+            <p th:if="${!#lists.isEmpty(pendingFollowUps)}" style="margin-top:14px;">
+                <span class="badge badge--alert" th:text="${#lists.size(pendingFollowUps) + ' follow-ups pending'}">Follow-ups</span>
+            </p>
+        </section>
+    </div>
+</section>
+</body>
+</html>

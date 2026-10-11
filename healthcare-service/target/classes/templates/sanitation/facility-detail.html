@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head><title>Facility details</title></head>
+<body><section>
+    <div class="page-header">
+        <div><span class="eyebrow">Sanitation · Facility</span><h1 th:text="${facility.name}">Facility name</h1><p th:text="${facility.location}">Location</p></div>
+        <a class="btn btn--secondary" th:href="@{/sanitation/facilities}">← All facilities</a>
+    </div>
+    <div class="content-grid">
+        <section class="card">
+            <h2>Facility details</h2>
+            <p><strong>Type</strong> · <span th:text="${facility.type}">TOILET</span></p>
+            <p><strong>Last maintenance</strong> · <span th:text="${facility.lastMaintenanceDate ?: 'No maintenance recorded'}">Date</span></p>
+            <form class="form" th:action="@{/sanitation/facilities/{id}/cleanliness(id=${facility.id})}" method="post">
+                <div class="field"><label for="cleanlinessStatus">Current condition</label>
+                    <select id="cleanlinessStatus" name="cleanlinessStatus" required>
+                        <option value="CLEAN" th:selected="${facility.cleanlinessStatus == 'CLEAN'}">Clean</option>
+                        <option value="NEEDS_CLEANING" th:selected="${facility.cleanlinessStatus == 'NEEDS_CLEANING'}">Needs cleaning</option>
+                        <option value="DAMAGED" th:selected="${facility.cleanlinessStatus == 'DAMAGED'}">Damaged</option>
+                    </select>
+                </div><button class="btn" type="submit">Update condition</button>
+            </form>
+        </section>
+        <section class="card">
+            <h2>Record maintenance</h2>
+            <form class="form" th:action="@{/sanitation/facilities/{id}/maintenance(id=${facility.id})}" method="post">
+                <div class="field"><label for="performedOn">Date completed</label><input id="performedOn" name="performedOn" type="date" required></div>
+                <div class="field"><label for="description">Work completed</label><textarea id="description" name="description" required placeholder="Describe the repair or cleaning"></textarea></div>
+                <button class="btn btn--secondary" type="submit">Save maintenance</button>
+            </form>
+        </section>
+    </div>
+    <div class="section-heading"><div><span class="eyebrow">Service history</span><h2>Maintenance records</h2></div></div>
+    <div class="table-wrap" th:if="${!#lists.isEmpty(maintenanceRecords)}">
+        <table><thead><tr><th>Date</th><th>Work completed</th><th>Completed by</th></tr></thead>
+            <tbody><tr th:each="record : ${maintenanceRecords}"><td th:text="${record.performedOn}">Date</td><td th:text="${record.description}">Work</td><td th:text="${record.performedBy}">Staff</td></tr></tbody>
+        </table>
+    </div>
+    <p class="empty-state" th:if="${#lists.isEmpty(maintenanceRecords)}">No maintenance has been recorded for this facility.</p>
+</section></body>
+</html>

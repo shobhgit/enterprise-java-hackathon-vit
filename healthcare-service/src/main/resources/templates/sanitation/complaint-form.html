@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head><title>Report sanitation concern</title></head>
+<body><section>
+    <div class="page-header"><div><span class="eyebrow">Public Health · Sanitation</span><h1>Report a concern</h1><p>Send a facility issue to the community response queue.</p></div>
+        <a class="btn btn--secondary" th:href="@{/sanitation/complaints}">← All reports</a></div>
+    <form class="form" th:action="@{/sanitation/complaints}" method="post">
+        <div class="field"><label for="facilityId">Facility</label><select id="facilityId" name="facilityId" required>
+            <option value="">Choose a facility</option><option th:each="facility : ${facilities}" th:value="${facility.id}" th:text="${facility.name + ' · ' + facility.location}">Facility</option>
+        </select></div>
+        <div class="field"><label for="description">What needs attention?</label><textarea id="description" name="description" rows="5" placeholder="Describe the issue and where it is visible" required></textarea></div>
+        <div class="field"><label for="reportedBy">Reported by</label><input id="reportedBy" name="reportedBy" placeholder="Your name or team" required></div>
+        <div class="form-actions"><button class="btn" type="submit">Send report</button><a class="btn btn--secondary" th:href="@{/sanitation/complaints}">Cancel</a></div>
+    </form>
+</section></body>
+</html>

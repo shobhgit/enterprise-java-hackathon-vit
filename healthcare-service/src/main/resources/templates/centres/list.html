@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!--
+    Route: GET/centres
+    Model: centres (list of health centres)
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Health centres</title>
+</head>
+<body>
+<section>
+
+    <div class="page-header">
+        <h1>Health centres</h1>
+        <a class="btn" th:href="@{/centres/new}">Add health centre</a>
+    </div>
+
+    <table th:if="${!#lists.isEmpty(centres)}">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${centres}">
+            <td th:text="${c.name}">Name</td>
+            <td th:text="${c.location}">Location</td>
+            <td><a th:href="@{/centres/{id}(id=${c.id})}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${#lists.isEmpty(centres)}">No health centres have been added yet.</p>
+
+</section>
+</body>
+</html>

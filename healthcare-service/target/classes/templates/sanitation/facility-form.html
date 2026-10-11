@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head><title>Add sanitation facility</title></head>
+<body><section>
+    <div class="page-header"><div><span class="eyebrow">Public Health · Sanitation</span><h1>Add a facility</h1><p>Register a shared facility so condition and maintenance can be tracked.</p></div>
+        <a class="btn btn--secondary" th:href="@{/sanitation/facilities}">← All facilities</a></div>
+    <form class="form" th:action="@{/sanitation/facilities}" method="post">
+        <div class="field"><label for="name">Facility name</label><input id="name" name="name" placeholder="e.g. East Street public well" required></div>
+        <div class="field-grid">
+            <div class="field"><label for="type">Facility type</label><select id="type" name="type" required><option value="">Choose a type</option><option value="TOILET">Public toilet</option><option value="WATER_POINT">Water point</option><option value="DRAIN">Drain</option><option value="WASTE_POINT">Waste collection point</option></select></div>
+            <div class="field"><label for="cleanlinessStatus">Current condition</label><select id="cleanlinessStatus" name="cleanlinessStatus" required><option value="CLEAN">Clean</option><option value="NEEDS_CLEANING">Needs cleaning</option><option value="DAMAGED">Damaged</option></select></div>
+        </div>
+        <div class="field"><label for="location">Location</label><input id="location" name="location" placeholder="Village, street or landmark" required></div>
+        <div class="form-actions"><button class="btn" type="submit">Save facility</button><a class="btn btn--secondary" th:href="@{/sanitation/facilities}">Cancel</a></div>
+    </form>
+</section></body>
+</html>

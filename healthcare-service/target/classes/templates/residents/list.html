@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--
+    model: residents
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Residents</title>
+</head>
+<body>
+<section>
+    <div class="page-header">
+        <h1>Residents</h1>
+        <a class="btn" th:href="@{/residents/new}">Add resident</a>
+    </div>
+    <!-- one row per resident-->
+    <table th:if="${!#lists.isEmpty(residents)}">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date of birth</th>
+            <th>Gender</th>
+            <th>Phone</th>
+            <th>Village</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="r:${residents}">
+            <td th:text="${r.fullName}">Name</td>
+            <td th:text="${r.dateOfBirth}">2000-01-01</td>
+            <td th:text="${r.gender}">MALE</td>
+            <td th:text="${r.phone}">Phone</td>
+            <td th:text="${r.village}">Village</td>
+            <td><a th:href="@{/residents/{id}(id=${r.id})}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <!--when there are no residents-->
+    <p th:if="${#lists.isEmpty(residents)}">No residents have been added yet.</p>
+</section>
+</body>
+</html>

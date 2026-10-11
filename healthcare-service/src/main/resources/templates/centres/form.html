@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--
+    Routes: GET /centres/new (show form), POST /centres (save)
+    Model: centre (form object)
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New health centre</title>
+</head>
+<body>
+<section>
+
+    <h1>New health centre</h1>
+
+    <form class="form" th:action="@{/centres}" th:object="${centre}" method="post">
+
+        <div class="field">
+            <label for="name">Name</label>
+            <input id="name" type="text" th:field="*{name}">
+            <span class="field__error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="location">Location</label>
+            <input id="location" type="text" th:field="*{location}">
+            <span class="field__error" th:if="${#fields.hasErrors('location')}" th:errors="*{location}">Error</span>
+        </div>
+
+        <button type="submit" class="btn">Save</button>
+        <a th:href="@{/centres}">Cancel</a>
+
+    </form>
+
+</section>
+</body>
+</html>

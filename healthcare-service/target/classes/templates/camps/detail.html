@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<!--
+    Route: GET /camps/{id}
+    Model: camp, staff, beneficiaries, allWorkers, allResidents,
+           beneficiary (empty form object for the add-beneficiary form)
+
+    This page has four small forms:
+      1. Change camp status      -> POST /camps/{id}/status
+      2. Add staff member        -> POST /camps/{id}/staff
+      3. Add beneficiary         -> POST /camps/{id}/beneficiaries
+      4. Update follow-up status -> POST /camps/{id}/beneficiaries/{bid}/followup
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Health camp details</title>
+</head>
+<body>
+<section>
+
+    <h1 th:text="${camp.name}">Camp name</h1>
+
+    <!-- Camp details and status -->
+    <div class="card">
+        <p><strong>Location:</strong> <span th:text="${camp.location}">Location</span></p>
+        <p><strong>Health centre:</strong> <span th:text="${camp.healthCentre?.name}">Centre</span></p>
+        <p><strong>Dates:</strong>
+            <span th:text="${#temporals.format(camp.startDate, 'dd MMM yyyy')}">Start</span>
+            to
+            <span th:text="${#temporals.format(camp.endDate, 'dd MMM yyyy')}">End</span></p>
+        <p><strong>Status:</strong> <span class="badge" th:text="${camp.status}">PLANNED</span></p>
+
+        <!-- Form 1: change the camp status. Values must match the CampStatus enum. -->
+        <form class="inline-form" method="post" th:action="@{/camps/{id}/status(id=${camp.id})}">
+            <select name="status">
+                <option value="PLANNED"   th:selected="${camp.status.name() == 'PLANNED'}">Planned</option>
+                <option value="ONGOING"   th:selected="${camp.status.name() == 'ONGOING'}">Ongoing</option>
+                <option value="COMPLETED" th:selected="${camp.status.name() == 'COMPLETED'}">Completed</option>
+            </select>
+            <button type="submit" class="btn btn--small">Update status</button>
+        </form>
+    </div>
+
+    <!-- Staff -->
+    <h2>Medical staff</h2>
+    <table th:if="${!#lists.isEmpty(staff)}">
+        <thead>
+        <tr><th>Name</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="s : ${staff}">
+            <td th:text="${s.fullName}">Name</td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(staff)}">No staff have been assigned to this camp yet.</p>
+
+    <!-- Form 2: add a staff member by choosing a health worker -->
+    <form class="inline-form" method="post" th:action="@{/camps/{id}/staff(id=${camp.id})}">
+        <select name="workerId" required>
+            <option value="">Select a health worker</option>
+            <option th:each="w : ${allWorkers}" th:value="${w.id}" th:text="${w.fullName}">Worker</option>
+        </select>
+        <button type="submit" class="btn btn--small">Add staff</button>
+    </form>
+
+    <!--  Beneficiaries  -->
+    <h2>Beneficiaries</h2>
+    <table th:if="${!#lists.isEmpty(beneficiaries)}">
+        <thead>
+        <tr>
+            <th>Resident</th>
+            <th>Screening result</th>
+            <th>Follow-up</th>
+            <!-- Only officers can change follow-up status -->
+            <th sec:authorize="hasRole('OFFICER')">Update follow-up</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="b : ${beneficiaries}">
+            <td th:text="${b.resident.fullName}">Resident</td>
+            <td th:text="${b.screeningResult}">Result</td>
+            <td><span class="badge" th:text="${b.followUpStatus}">PENDING</span></td>
+            <td sec:authorize="hasRole('OFFICER')">
+                <!-- Form 4: update follow-up status (OFFICER only) -->
+                <form class="inline-form" method="post"
+                      th:action="@{/camps/{id}/beneficiaries/{bid}/followup(id=${camp.id}, bid=${b.id})}">
+                    <select name="followUpStatus">
+                        <option value="NOT_REQUIRED" th:selected="${b.followUpStatus?.name() == 'NOT_REQUIRED'}">Not required</option>
+                        <option value="PENDING"      th:selected="${b.followUpStatus?.name() == 'PENDING'}">Pending</option>
+                        <option value="DONE"         th:selected="${b.followUpStatus?.name() == 'DONE'}">Done</option>
+                    </select>
+                    <button type="submit" class="btn btn--small">Save</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${#lists.isEmpty(beneficiaries)}">No beneficiaries have been added yet.</p>
+
+    <!-- Form 3: add a beneficiary -->
+    <h2>Add beneficiary</h2>
+    <form class="form" th:object="${beneficiary}" method="post"
+          th:action="@{/camps/{id}/beneficiaries(id=${camp.id})}">
+
+        <div class="field">
+            <label for="residentId">Resident</label>
+            <select id="residentId" th:field="*{residentId}">
+                <option value="">Select a resident</option>
+                <option th:each="r : ${allResidents}" th:value="${r.id}" th:text="${r.fullName}">Name</option>
+            </select>
+            <span class="field__error" th:if="${#fields.hasErrors('residentId')}" th:errors="*{residentId}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="screeningResult">Screening result</label>
+            <input id="screeningResult" type="text" th:field="*{screeningResult}">
+            <span class="field__error" th:if="${#fields.hasErrors('screeningResult')}" th:errors="*{screeningResult}">Error</span>
+        </div>
+
+        <div class="field">
+            <label for="followUpStatus">Follow-up</label>
+            <!-- Values must match the FollowUpStatus enum -->
+            <select id="followUpStatus" th:field="*{followUpStatus}">
+                <option value="NOT_REQUIRED">Not required</option>
+                <option value="PENDING">Pending</option>
+                <option value="DONE">Done</option>
+            </select>
+            <span class="field__error" th:if="${#fields.hasErrors('followUpStatus')}" th:errors="*{followUpStatus}">Error</span>
+        </div>
+
+        <button type="submit" class="btn">Add beneficiary</button>
+
+    </form>
+
+    <p><a th:href="@{/camps}">Back to health camps</a></p>
+
+</section>
+</body>
+</html>

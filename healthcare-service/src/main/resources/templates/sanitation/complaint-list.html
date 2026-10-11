@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head><title>Sanitation complaints</title></head>
+<body><section>
+    <div class="page-header">
+        <div><span class="eyebrow">Public Health · Sanitation</span><h1>Community reports</h1><p>Track cleanliness concerns and coordinate a clear response with local teams.</p></div>
+        <a class="btn" th:href="@{/sanitation/complaints/new}">＋ Report concern</a>
+    </div>
+    <div class="table-wrap" th:if="${!#lists.isEmpty(complaints)}">
+        <table><thead><tr><th>Facility</th><th>Concern</th><th>Reported by</th><th>Reported</th><th>Status</th><th>Update</th></tr></thead>
+            <tbody><tr th:each="complaint : ${complaints}">
+                <td><strong th:text="${complaint.facilityName}">Facility</strong></td>
+                <td th:text="${complaint.description}">Description</td><td th:text="${complaint.reportedBy}">Reporter</td>
+                <td th:text="${#strings.replace(complaint.createdAt, 'T', ' ')}">Date</td>
+                <td><span th:class="${complaint.status == 'RESOLVED'} ? 'badge badge--success' : 'badge badge--alert'" th:text="${complaint.status}">OPEN</span></td>
+                <td>
+                    <form class="inline-form" th:if="${complaint.status != 'RESOLVED'}" th:action="@{/sanitation/complaints/{id}/status(id=${complaint.id})}" method="post">
+                        <select name="status" aria-label="Complaint status">
+                            <option value="IN_PROGRESS" th:selected="${complaint.status == 'OPEN'}">In progress</option>
+                            <option value="RESOLVED">Resolved</option>
+                        </select>
+                        <input name="resolution" type="text" placeholder="Resolution note" aria-label="Resolution note" required>
+                        <button class="btn btn--small" type="submit">Save</button>
+                    </form>
+                    <span class="badge badge--success" th:if="${complaint.status == 'RESOLVED'}">Closed</span>
+                </td>
+            </tr></tbody>
+        </table>
+    </div>
+    <p class="empty-state" th:if="${#lists.isEmpty(complaints)}">No concerns have been reported. New reports will appear here.</p>
+</section></body>
+</html>

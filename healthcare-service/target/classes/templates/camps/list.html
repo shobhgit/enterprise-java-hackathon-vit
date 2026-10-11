@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--
+    Route: GET /camps
+    Model: camps (list of health camps)
+-->
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Health camps</title>
+</head>
+<body>
+<section>
+
+    <div class="page-header">
+        <h1>Health camps</h1>
+        <a class="btn" th:href="@{/camps/new}">Plan a camp</a>
+    </div>
+
+    <table th:if="${!#lists.isEmpty(camps)}">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Health centre</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="c : ${camps}">
+            <td th:text="${c.name}">Name</td>
+            <td th:text="${c.location}">Location</td>
+            <!-- A camp does not have to belong to a centre, so this can be empty -->
+            <td th:text="${c.healthCentre?.name}">Centre</td>
+            <td th:text="${#temporals.format(c.startDate, 'dd MMM yyyy')}">Start</td>
+            <td th:text="${#temporals.format(c.endDate, 'dd MMM yyyy')}">End</td>
+            <td><span class="badge" th:text="${c.status}">PLANNED</span></td>
+            <td><a th:href="@{/camps/{id}(id=${c.id})}">View</a></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${#lists.isEmpty(camps)}">No health camps have been planned yet.</p>
+
+</section>
+</body>
+</html>

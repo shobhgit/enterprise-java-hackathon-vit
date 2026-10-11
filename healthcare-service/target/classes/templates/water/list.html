@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/base :: layout(~{::title}, ~{::section})}" xmlns:th="http://www.thymeleaf.org">
+<head><title>Water monitoring</title></head>
+<body><section>
+    <div class="page-header">
+        <div><span class="eyebrow">Public Health · Water quality</span><h1>Water observations</h1><p>Review local water quality and keep corrective actions visible until resolved.</p></div>
+        <a class="btn" th:href="@{/water/new}">＋ Record observation</a>
+    </div>
+    <div class="table-wrap" th:if="${!#lists.isEmpty(records)}">
+        <table><thead><tr><th>Location</th><th>Source</th><th>Quality</th><th>Observed</th><th>Finding</th><th>Action</th></tr></thead>
+            <tbody><tr th:each="record : ${records}">
+                <td><strong th:text="${record.location}">Location</strong><div style="color:var(--muted);font-size:.8rem;" th:text="${record.supplyInfo}">Supply info</div></td>
+                <td th:text="${record.source}">WELL</td>
+                <td><span th:class="${record.qualityStatus == 'SAFE'} ? 'badge badge--success' : 'badge badge--alert'" th:text="${record.qualityStatus}">SAFE</span></td>
+                <td th:text="${record.observedOn}">Date</td>
+                <td th:text="${record.issueDescription ?: 'Routine observation'}">Finding</td>
+                <td>
+                    <form class="inline-form" th:if="${record.actionStatus != 'RESOLVED' and record.actionStatus != 'NOT_REQUIRED'}" th:action="@{/water/{id}/status(id=${record.id})}" method="post">
+                        <select name="actionStatus" aria-label="Water corrective action status">
+                            <option value="IN_PROGRESS" th:selected="${record.actionStatus == 'OPEN'}">In progress</option>
+                            <option value="RESOLVED">Resolved</option>
+                        </select>
+                        <input name="correctiveAction" type="text" placeholder="Corrective action" aria-label="Corrective action" required>
+                        <button class="btn btn--small" type="submit">Save</button>
+                    </form>
+                    <span class="badge badge--success" th:if="${record.actionStatus == 'RESOLVED' or record.actionStatus == 'NOT_REQUIRED'}" th:text="${record.actionStatus}">Resolved</span>
+                </td>
+            </tr></tbody>
+        </table>
+    </div>
+    <p class="empty-state" th:if="${#lists.isEmpty(records)}">No water observations recorded. Add a quality check to begin monitoring.</p>
+</section></body>
+</html>
